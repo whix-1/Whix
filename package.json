@@ -1,0 +1,31 @@
+{
+  "name": "whix-vtu-platform",
+  "version": "1.0.0",
+  "description": "Modern Fintech VTU Platform - Whix VTU",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm start\"",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "start": "npm run start:backend",
+    "test": "concurrently \"cd backend && npm test\" \"cd frontend && npm test\"",
+    "lint": "concurrently \"cd backend && npm run lint\" \"cd frontend && npm run lint\"",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f"
+  },
+  "keywords": [
+    "fintech",
+    "vtu",
+    "payment",
+    "airtime",
+    "data",
+    "wallet"
+  ],
+  "author": "Whix Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  }
+}

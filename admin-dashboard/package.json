@@ -1,0 +1,36 @@
+{
+  "name": "whix-vtu-admin",
+  "version": "1.0.0",
+  "description": "Whix VTU Admin Dashboard",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint",
+    "test": "jest"
+  },
+  "dependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^5.3.3",
+    "tailwindcss": "^3.4.0",
+    "recharts": "^2.10.3",
+    "axios": "^1.6.2",
+    "zustand": "^4.4.7",
+    "react-icons": "^4.13.0",
+    "react-hook-form": "^7.50.0",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^10.16.16"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@types/jest": "^29.5.8",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "prettier": "^3.1.1",
+    "eslint": "^8.55.0"
+  }
+}

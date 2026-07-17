@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: whix_postgres
+    environment:
+      POSTGRES_DB: whix_vtu
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - whix_network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: whix_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - whix_network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: whix_backend
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres_password@postgres:5432/whix_vtu
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - whix_network
+    command: npm run dev
+
+  # Frontend Web
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: whix_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:5000/api
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - whix_network
+    command: npm start
+
+  # Admin Dashboard
+  admin:
+    build:
+      context: ./admin-dashboard
+      dockerfile: Dockerfile.dev
+    container_name: whix_admin
+    ports:
+      - "3001:3000"
+    environment:
+      REACT_APP_API_URL: http://localhost:5000/api
+    depends_on:
+      - backend
+    volumes:
+      - ./admin-dashboard:/app
+      - /app/node_modules
+    networks:
+      - whix_network
+    command: npm start
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  whix_network:
+    driver: bridge
